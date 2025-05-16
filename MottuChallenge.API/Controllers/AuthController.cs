@@ -28,4 +28,15 @@ public class AuthController : ControllerBase
         return Created($"/users/{userResponse.Id}", userResponse);
     }
 
+    [HttpPost("login")]
+    public IActionResult Login([FromBody] LoginRequest request)
+    {
+        var user = _context.User.SingleOrDefault(u => u.Email == request.Email);
+        if (user == null || !user.CheckPassword(request.Password))
+            return Unauthorized("Usuário ou senha inválidos");
+
+        var token = TokenService.GenerateToken(user);
+        return Ok(new { token });
+    }
+
 }
