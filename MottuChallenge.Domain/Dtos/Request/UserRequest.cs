@@ -18,4 +18,5 @@ public class UserRequest
 
     [Required(ErrorMessage = "Senha não pode ser vazio.")]
     public string Password { get; set; }
+
 }

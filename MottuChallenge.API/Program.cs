@@ -10,6 +10,7 @@ builder.Services.AddDbContext<MottuChallengeContext>(options =>
 
 // 2. Registra o seu serviço de usuário para injeção de dependência
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<PatioService>();
 // Se você tiver uma interface IUserService, prefira:
 // builder.Services.AddScoped<IUserService, UserService>();
 

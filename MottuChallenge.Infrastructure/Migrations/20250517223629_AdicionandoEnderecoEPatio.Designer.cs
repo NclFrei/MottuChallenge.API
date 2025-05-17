@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MottuChallenge.Infrastructure.Data;
 using Oracle.EntityFrameworkCore.Metadata;
@@ -11,9 +12,11 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace MottuChallenge.Infrastructure.Migrations
 {
     [DbContext(typeof(MottuChallengeContext))]
-    partial class MottuChallengeContextModelSnapshot : ModelSnapshot
+    [Migration("20250517223629_AdicionandoEnderecoEPatio")]
+    partial class AdicionandoEnderecoEPatio
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,15 +79,10 @@ namespace MottuChallenge.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("RAW(16)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("EnderecoId")
                         .IsUnique();
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Patios");
                 });
@@ -120,20 +118,7 @@ namespace MottuChallenge.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MottuChallenge.Domain.Models.User", "User")
-                        .WithMany("Patios")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Endereco");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("MottuChallenge.Domain.Models.User", b =>
-                {
-                    b.Navigation("Patios");
                 });
 #pragma warning restore 612, 618
         }
