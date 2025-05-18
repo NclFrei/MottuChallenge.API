@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MottuChallenge.Infrastructure.Data;
 using Oracle.EntityFrameworkCore.Metadata;
@@ -11,9 +12,11 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace MottuChallenge.Infrastructure.Migrations
 {
     [DbContext(typeof(MottuChallengeContext))]
-    partial class MottuChallengeContextModelSnapshot : ModelSnapshot
+    [Migration("20250518013251_AdicionandoAreaPatio")]
+    partial class AdicionandoAreaPatio
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

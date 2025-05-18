@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace MottuChallenge.Domain.Models;
 
-public class Patio
+public class Area
 {
     public Guid Id { get; set; }
     public string Nome { get; set; }
-    public Guid EnderecoId { get; set; }
-    public Endereco Endereco { get; set; }
-    public Guid UserId { get; set; }
-    public User User { get; set; }
-    public ICollection<Area> Areas { get; set; }
+
+    public Guid PatioId { get; set; }
+    public Patio Patio { get; set; }
 }

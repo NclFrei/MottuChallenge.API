@@ -11,24 +11,14 @@ namespace MottuChallenge.Application.Converter;
 
 public class PatioConverter
 {
-    public static Patio paraPatio(PatioRequest patioRequest, Guid enderecoId)
+    public static Patio ParaPatio(PatioRequest request, Guid enderecoId)
     {
         return new Patio
         {
-            Nome = patioRequest.Nome,
+            Id = Guid.NewGuid(),
+            Nome = request.Nome,
             EnderecoId = enderecoId,
-            UserId = patioRequest.UserId // novo vínculo com usuário
-        };
-    }
-
-    public static PatioResponse ParaPatioResponse(Patio patio, Endereco endereco, User user)
-    {
-        return new PatioResponse
-        {
-            Id = patio.Id,
-            Nome = patio.Nome,
-            Endereco = EnderecoConverter.ParaEnderecoResponse(endereco),
-            Usuario = UserConverter.ParaUserResponse(user)
+            UserId = request.UserId
         };
     }
 
@@ -47,6 +37,18 @@ public class PatioConverter
             patio.Endereco.Complemento = request.Endereco.Complemento;
             patio.Endereco.Cep = request.Endereco.Cep;
         }
+    }
+
+    public static PatioResponse ParaPatioResponse(Patio patio, Endereco endereco, User user)
+    {
+        return new PatioResponse
+        {
+            Id = patio.Id,
+            Nome = patio.Nome,
+            Endereco = EnderecoConverter.ParaEnderecoResponse(endereco),
+            Usuario = UserConverter.ParaUserResponse(user),
+            Areas = patio.Areas?.Select(AreaConverter.ParaAreaResponse).ToList() ?? new()
+        };
     }
 
 

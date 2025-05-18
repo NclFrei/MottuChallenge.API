@@ -27,7 +27,7 @@ public class PatioService
         _context.Enderecos.Add(endereco);
         await _context.SaveChangesAsync();
 
-        var patio = PatioConverter.paraPatio(patioRequest, endereco.Id);
+        var patio = PatioConverter.ParaPatio(patioRequest, endereco.Id);
         _context.Patios.Add(patio);
         await _context.SaveChangesAsync();
 
@@ -42,16 +42,24 @@ public class PatioService
 
     public async Task<List<PatioResponse>> GetAllPatiosAsync()
     {
-        var patios = await _context.Patios.Include(p => p.Endereco).Include(p => p.User).ToListAsync();
-        return patios.Select(p => PatioConverter.ParaPatioResponse(p, p.Endereco, p.User)).ToList();
+        var patios = await _context.Patios
+        .Include(p => p.Endereco)
+        .Include(p => p.User)
+        .Include(p => p.Areas)
+        .ToListAsync();
+
+        return patios.Select(p =>
+            PatioConverter.ParaPatioResponse(p, p.Endereco, p.User)
+        ).ToList();
     }
 
     public async Task<PatioResponse?> GetPatioByIdAsync(Guid id)
     {
         var patio = await _context.Patios
-            .Include(p => p.Endereco)
-            .Include(p => p.User)
-            .FirstOrDefaultAsync(p => p.Id == id);
+         .Include(p => p.Endereco)
+         .Include(p => p.User)
+         .Include(p => p.Areas)
+         .FirstOrDefaultAsync(p => p.Id == id);
 
         if (patio == null) return null;
 
@@ -61,14 +69,13 @@ public class PatioService
     public async Task<PatioResponse?> UpdatePatioAsync(Guid id, PatioRequest request)
     {
         var patio = await _context.Patios
-       .Include(p => p.Endereco)
-       .FirstOrDefaultAsync(p => p.Id == id);
+        .Include(p => p.Endereco)
+        .Include(p => p.Areas)
+        .FirstOrDefaultAsync(p => p.Id == id);
 
-        if (patio == null) 
-            return null;
+        if (patio == null) return null;
 
         PatioConverter.AtualizarPatio(patio, request);
-
         await _context.SaveChangesAsync();
 
         var user = await _context.User.FindAsync(patio.UserId);

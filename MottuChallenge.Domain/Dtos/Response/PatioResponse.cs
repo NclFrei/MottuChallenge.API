@@ -13,4 +13,5 @@ public class PatioResponse
     public string Nome { get; set; }
     public EnderecoResponse Endereco { get; set; }
     public UserResponse Usuario { get; set; }
+    public List<AreaResponse> Areas { get; set; }
 }

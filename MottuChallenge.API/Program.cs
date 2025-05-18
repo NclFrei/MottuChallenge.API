@@ -19,6 +19,7 @@ builder.Services.AddDbContext<MottuChallengeContext>(options =>
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<PatioService>();
 builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<AreaService>();
 
 
 // var key = Encoding.ASCII.GetBytes(builder.Configuration["JwtSettings:SecretKey"]);
