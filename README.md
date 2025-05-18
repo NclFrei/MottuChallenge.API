@@ -85,4 +85,4 @@ MottuChallenge/
 
 1. Clone o repositório:
 ```bash
-git clone https://github.com/SEU_USUARIO/mottu-challenge-api.git
+git clone https://github.com/NclFrei/MottuChallenge.API
