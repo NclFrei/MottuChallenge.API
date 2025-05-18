@@ -18,6 +18,9 @@ public class AreaController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(typeof(AreaResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<AreaResponse>> Create([FromBody] AreaRequest request)
     {
         var response = await _service.CreateAsync(request);
@@ -25,12 +28,17 @@ public class AreaController : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<AreaResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<IEnumerable<AreaResponse>>> GetAll()
     {
         return Ok(await _service.GetAllAsync());
     }
 
     [HttpGet("{id}")]
+    [ProducesResponseType(typeof(AreaResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<AreaResponse>> GetById(Guid id)
     {
         var response = await _service.GetByIdAsync(id);
@@ -41,6 +49,10 @@ public class AreaController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [ProducesResponseType(typeof(AreaResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<AreaResponse>> Update(Guid id, [FromBody] AreaRequest request)
     {
         var updated = await _service.UpdateAsync(id, request);
@@ -51,6 +63,9 @@ public class AreaController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Delete(Guid id)
     {
         var deleted = await _service.DeleteAsync(id);

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using MottuChallenge.Application.Service;
 using MottuChallenge.Domain.Dtos.Request;
+using MottuChallenge.Domain.Dtos.Response;
 using MottuChallenge.Domain.Models;
 using MottuChallenge.Infrastructure.Data;
 
@@ -27,6 +28,9 @@ public class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("Register")]
+    [ProducesResponseType(typeof(UserResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Register([FromBody] UserRequest userRequest)
     {
         var userResponse = await _userService.CreateUserAsync(userRequest);
@@ -35,6 +39,10 @@ public class AuthController : ControllerBase
 
     [HttpPost("login")]
     [AllowAnonymous]
+    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)] // retorna token
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public IActionResult Login([FromBody] LoginRequest request)
     {
         var user = _context.User.SingleOrDefault(u => u.Email == request.Email);
