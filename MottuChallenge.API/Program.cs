@@ -12,8 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MottuChallengeContext>(options =>
     options.UseOracle(builder.Configuration.GetConnectionString("OracleConnection")));
 
-
-// builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 
 
 builder.Services.AddScoped<UserService>();
@@ -22,9 +21,9 @@ builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<AreaService>();
 
 
-// var key = Encoding.ASCII.GetBytes(builder.Configuration["JwtSettings:SecretKey"]);
+ var key = Encoding.ASCII.GetBytes(builder.Configuration["JwtSettings:SecretKey"]);
 
-/* builder.Services.AddAuthentication(options =>
+ builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -58,7 +57,7 @@ builder.Services.AddScoped<AreaService>();
             return context.Response.WriteAsync("{\"message\": \"Você não tem permissão para acessar este recurso.\"}");
         }
     };
-});  */
+});  
 
 
 builder.Services.AddControllers();
@@ -76,7 +75,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// app.UseAuthentication();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
