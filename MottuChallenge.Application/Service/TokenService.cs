@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using MottuChallenge.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -12,9 +13,16 @@ namespace MottuChallenge.Application.Service;
 
 public class TokenService
 {
-    public static string GenerateToken(User user)
+    private readonly JwtSettings _jwtSettings;
+
+    public TokenService(IOptions<JwtSettings> jwtSettings)
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("8e442c3c1e21c19af4e76606e6d11f97aeaba2c8"));
+        _jwtSettings = jwtSettings.Value;
+    }
+
+    public string GenerateToken(User user)
+    {
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new[]
@@ -31,6 +39,4 @@ public class TokenService
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
-
-
 }

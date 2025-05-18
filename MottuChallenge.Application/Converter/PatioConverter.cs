@@ -31,4 +31,23 @@ public class PatioConverter
             Usuario = UserConverter.ParaUserResponse(user)
         };
     }
+
+    public static void AtualizarPatio(Patio patio, PatioRequest request)
+    {
+        patio.Nome = request.Nome;
+        patio.UserId = request.UserId;
+
+        if (patio.Endereco != null && request.Endereco != null)
+        {
+            patio.Endereco.Rua = request.Endereco.Rua;
+            patio.Endereco.Numero = request.Endereco.Numero;
+            patio.Endereco.Bairro = request.Endereco.Bairro;
+            patio.Endereco.Cidade = request.Endereco.Cidade;
+            patio.Endereco.Estado = request.Endereco.Estado;
+            patio.Endereco.Complemento = request.Endereco.Complemento;
+            patio.Endereco.Cep = request.Endereco.Cep;
+        }
+    }
+
+
 }

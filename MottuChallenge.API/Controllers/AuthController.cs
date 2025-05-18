@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using MottuChallenge.Application.Service;
@@ -8,19 +9,23 @@ using MottuChallenge.Infrastructure.Data;
 
 namespace MottuChallenge.API.Controllers;
 
-[Route("api/[controller]")]
+
+[Route("ChallengeMottu/[controller]")]
 [ApiController]
 public class AuthController : ControllerBase
 {
     private readonly MottuChallengeContext _context;
     private readonly UserService _userService;
+    private readonly TokenService _tokenService;
 
-    public AuthController(MottuChallengeContext context, UserService userService)
+    public AuthController(MottuChallengeContext context, UserService userService, TokenService tokenService)
     {
         _context = context;
         _userService = userService;
+        _tokenService = tokenService;
     }
 
+    [AllowAnonymous]
     [HttpPost("Register")]
     public async Task<IActionResult> Register([FromBody] UserRequest userRequest)
     {
@@ -29,13 +34,14 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public IActionResult Login([FromBody] LoginRequest request)
     {
         var user = _context.User.SingleOrDefault(u => u.Email == request.Email);
         if (user == null || !user.CheckPassword(request.Password))
             return Unauthorized("Usuário ou senha inválidos");
 
-        var token = TokenService.GenerateToken(user);
+        var token = _tokenService.GenerateToken(user);
         return Ok(new { token });
     }
 
