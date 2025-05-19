@@ -26,6 +26,8 @@ public class AuthController : ControllerBase
         _tokenService = tokenService;
     }
 
+
+
     [AllowAnonymous]
     [HttpPost("Register")]
     [ProducesResponseType(typeof(UserResponse), StatusCodes.Status201Created)]
@@ -36,6 +38,7 @@ public class AuthController : ControllerBase
         var userResponse = await _userService.CreateUserAsync(userRequest);
         return Created($"/users/{userResponse.Id}", userResponse);
     }
+
 
     [HttpPost("login")]
     [AllowAnonymous]

@@ -24,7 +24,7 @@ public class UserService
         {
             Id = Guid.NewGuid(),
             Nome = userRequest.Nome,
-            Email = userRequest.Email
+            Email = userRequest.Email 
         };
 
         user.SetPassword(userRequest.Password);

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace MottuChallenge.Application.Service;
@@ -40,13 +41,16 @@ public class AreaService
         return area == null ? null : AreaConverter.ParaAreaResponse(area);
     }
 
-    public async Task<AreaResponse?> UpdateAsync(Guid id, AreaRequest request)
+    public async Task<AreaResponse?> UpdateAsync(Guid id, JsonElement request)
     {
-        var area = await _context.Areas.FindAsync(id);
+        var area = await _context.Areas
+            .Include(a => a.Motos)
+            .FirstOrDefaultAsync(a => a.Id == id);
+
         if (area == null) return null;
 
-        AreaConverter.AtualizarArea(area, request);
-        await _context.SaveChangesAsync();
+        if (AreaConverter.AtualizarArea(area, request))
+            await _context.SaveChangesAsync();
 
         return AreaConverter.ParaAreaResponse(area);
     }

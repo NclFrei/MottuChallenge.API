@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace MottuChallenge.Application.Service;
@@ -37,7 +38,7 @@ public class PatioService
 
         var user = await _context.User.FindAsync(patio.UserId);
 
-        return PatioConverter.ParaPatioResponse(patio, endereco, user);
+        return PatioConverter.ParaPatioResponse(patio, endereco);
     }
 
     public async Task<List<PatioResponse>> GetAllPatiosAsync()
@@ -49,7 +50,7 @@ public class PatioService
         .ToListAsync();
 
         return patios.Select(p =>
-            PatioConverter.ParaPatioResponse(p, p.Endereco, p.User)
+            PatioConverter.ParaPatioResponse(p, p.Endereco)
         ).ToList();
     }
 
@@ -63,24 +64,53 @@ public class PatioService
 
         if (patio == null) return null;
 
-        return PatioConverter.ParaPatioResponse(patio, patio.Endereco, patio.User);
+        return PatioConverter.ParaPatioResponse(patio, patio.Endereco);
     }
 
-    public async Task<PatioResponse?> UpdatePatioAsync(Guid id, PatioRequest request)
+    public async Task<PatioResponse?> UpdatePatioAsync(Guid id, JsonElement request)
     {
         var patio = await _context.Patios
-        .Include(p => p.Endereco)
-        .Include(p => p.Areas)
-        .FirstOrDefaultAsync(p => p.Id == id);
+            .Include(p => p.Endereco)
+            .FirstOrDefaultAsync(p => p.Id == id);
 
-        if (patio == null) return null;
+        if (patio == null)
+            return null;
 
-        PatioConverter.AtualizarPatio(patio, request);
-        await _context.SaveChangesAsync();
+        bool alterado = false;
+
+        if (request.TryGetProperty("nome", out var nomeProp))
+        {
+            var novoNome = nomeProp.GetString();
+            if (!string.IsNullOrWhiteSpace(novoNome) && novoNome != patio.Nome)
+            {
+                patio.Nome = novoNome;
+                alterado = true;
+            }
+        }
+
+        if (request.TryGetProperty("userId", out var userIdProp))
+        {
+            var novoUserId = userIdProp.GetGuid();
+            if (novoUserId != patio.UserId)
+            {
+                patio.UserId = novoUserId;
+                alterado = true;
+            }
+        }
+
+        if (request.TryGetProperty("endereco", out var enderecoProp) && patio.Endereco != null)
+        {
+            if (EnderecoConverter.AtualizarEndereco(patio.Endereco, enderecoProp))
+                alterado = true;
+        }
+
+        if (alterado)
+            await _context.SaveChangesAsync();
 
         var user = await _context.User.FindAsync(patio.UserId);
-        return PatioConverter.ParaPatioResponse(patio, patio.Endereco, user);
+        return PatioConverter.ParaPatioResponse(patio, patio.Endereco);
     }
+
 
     public async Task<bool> DeletePatioAsync(Guid id)
     {

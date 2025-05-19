@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MottuChallenge.Infrastructure.Data;
 using Oracle.EntityFrameworkCore.Metadata;
@@ -11,9 +12,11 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace MottuChallenge.Infrastructure.Migrations
 {
     [DbContext(typeof(MottuChallengeContext))]
-    partial class MottuChallengeContextModelSnapshot : ModelSnapshot
+    [Migration("20250519034307_AdicionandoMotos")]
+    partial class AdicionandoMotos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -92,9 +95,8 @@ namespace MottuChallenge.Infrastructure.Migrations
                     b.Property<Guid>("AreaId")
                         .HasColumnType("RAW(16)");
 
-                    b.Property<string>("Modelo")
-                        .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)");
+                    b.Property<int>("Modelo")
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Placa")
                         .IsRequired()

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MottuChallenge.Application.Service;
 using MottuChallenge.Domain.Dtos.Request;
 using MottuChallenge.Domain.Dtos.Response;
+using System.Text.Json;
 
 namespace MottuChallenge.API.Controllers;
 
@@ -19,6 +20,7 @@ public class AreaController : ControllerBase
 
     [HttpPost]
     [ProducesResponseType(typeof(AreaResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<AreaResponse>> Create([FromBody] AreaRequest request)
@@ -29,6 +31,7 @@ public class AreaController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<AreaResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<IEnumerable<AreaResponse>>> GetAll()
     {
@@ -37,6 +40,7 @@ public class AreaController : ControllerBase
 
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(AreaResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<AreaResponse>> GetById(Guid id)
@@ -48,12 +52,13 @@ public class AreaController : ControllerBase
         return Ok(response);
     }
 
-    [HttpPut("{id}")]
+    [HttpPatch("{id}")]
     [ProducesResponseType(typeof(AreaResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<AreaResponse>> Update(Guid id, [FromBody] AreaRequest request)
+    public async Task<ActionResult<AreaResponse>> PatchArea(Guid id, [FromBody] JsonElement request)
     {
         var updated = await _service.UpdateAsync(id, request);
         if (updated == null)
@@ -64,6 +69,7 @@ public class AreaController : ControllerBase
 
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Delete(Guid id)

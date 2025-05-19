@@ -8,7 +8,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddDbContext<MottuChallengeContext>(options =>
     options.UseOracle(builder.Configuration.GetConnectionString("OracleConnection")));
 
@@ -19,9 +18,10 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<PatioService>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<AreaService>();
+builder.Services.AddScoped<MotoService>();
 
 
- var key = Encoding.ASCII.GetBytes(builder.Configuration["JwtSettings:SecretKey"]);
+var key = Encoding.ASCII.GetBytes(builder.Configuration["JwtSettings:SecretKey"]);
 
  builder.Services.AddAuthentication(options =>
 {
@@ -45,7 +45,7 @@ builder.Services.AddScoped<AreaService>();
     {
         OnChallenge = context =>
         {
-            context.HandleResponse(); // Impede a resposta padrão
+            context.HandleResponse(); 
             context.Response.StatusCode = 401;
             context.Response.ContentType = "application/json";
             return context.Response.WriteAsync("{\"message\": \"Você precisa estar logado para acessar este recurso.\"}");

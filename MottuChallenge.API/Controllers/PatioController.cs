@@ -5,10 +5,10 @@ using MottuChallenge.Application.Service;
 using MottuChallenge.Domain.Dtos.Request;
 using MottuChallenge.Domain.Dtos.Response;
 using MottuChallenge.Domain.Models;
+using System.Text.Json;
 
 namespace MottuChallenge.API.Controllers;
 
-// [Authorize]
 [Route("ChallengeMottu/[controller]")]
 [ApiController]
 public class PatioController : ControllerBase
@@ -41,6 +41,7 @@ public class PatioController : ControllerBase
 
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(PatioResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<PatioResponse>> GetPatioById(Guid id)
     {
@@ -53,11 +54,12 @@ public class PatioController : ControllerBase
     }
 
 
-    [HttpPut("{id}")]
+    [HttpPatch("{id}")]
     [ProducesResponseType(typeof(PatioResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<PatioResponse>> UpdatePatio(Guid id, [FromBody] PatioRequest request)
+    public async Task<ActionResult<PatioResponse>> PatchPatio(Guid id, [FromBody] JsonElement request)
     {
         var updated = await _patioService.UpdatePatioAsync(id, request);
         if (updated == null)
@@ -68,6 +70,7 @@ public class PatioController : ControllerBase
 
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeletePatio(Guid id)
     {

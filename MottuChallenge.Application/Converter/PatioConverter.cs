@@ -15,38 +15,31 @@ public class PatioConverter
     {
         return new Patio
         {
-            Id = Guid.NewGuid(),
             Nome = request.Nome,
             EnderecoId = enderecoId,
             UserId = request.UserId
         };
     }
 
+    public static List<PatioResponse> ParaListaResponse(IEnumerable<Patio> patios)
+    {
+        return patios.Select(p => ParaPatioResponse(p, p.Endereco)).ToList();
+    }
+
     public static void AtualizarPatio(Patio patio, PatioRequest request)
     {
         patio.Nome = request.Nome;
         patio.UserId = request.UserId;
-
-        if (patio.Endereco != null && request.Endereco != null)
-        {
-            patio.Endereco.Rua = request.Endereco.Rua;
-            patio.Endereco.Numero = request.Endereco.Numero;
-            patio.Endereco.Bairro = request.Endereco.Bairro;
-            patio.Endereco.Cidade = request.Endereco.Cidade;
-            patio.Endereco.Estado = request.Endereco.Estado;
-            patio.Endereco.Complemento = request.Endereco.Complemento;
-            patio.Endereco.Cep = request.Endereco.Cep;
-        }
     }
 
-    public static PatioResponse ParaPatioResponse(Patio patio, Endereco endereco, User user)
+    public static PatioResponse ParaPatioResponse(Patio patio, Endereco endereco)
     {
         return new PatioResponse
         {
             Id = patio.Id,
             Nome = patio.Nome,
             Endereco = EnderecoConverter.ParaEnderecoResponse(endereco),
-            Usuario = UserConverter.ParaUserResponse(user),
+            UserId = patio.UserId,
             Areas = patio.Areas?.Select(AreaConverter.ParaAreaResponse).ToList() ?? new()
         };
     }

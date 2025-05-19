@@ -13,4 +13,5 @@ public class Area
 
     public Guid PatioId { get; set; }
     public Patio Patio { get; set; }
+    public ICollection<Moto> Motos { get; set; }
 }

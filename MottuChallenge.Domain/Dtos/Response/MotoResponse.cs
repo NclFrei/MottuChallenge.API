@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace MottuChallenge.Domain.Dtos.Response;
 
-public class AreaResponse
+public class MotoResponse
 {
     public Guid Id { get; set; }
-    public string Nome { get; set; }
-    public Guid PatioId { get; set; }
-    public List<MotoResponse> Motos { get; set; }
+    public string Placa { get; set; }
+    public string Modelo { get; set; }
+    public Guid AreaId { get; set; }
 }

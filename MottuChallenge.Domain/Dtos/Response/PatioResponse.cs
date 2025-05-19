@@ -12,6 +12,6 @@ public class PatioResponse
     public Guid Id { get; set; }
     public string Nome { get; set; }
     public EnderecoResponse Endereco { get; set; }
-    public UserResponse Usuario { get; set; }
+    public Guid UserId { get; set; }
     public List<AreaResponse> Areas { get; set; }
 }
