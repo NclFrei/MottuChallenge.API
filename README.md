@@ -1,4 +1,4 @@
-# Mottu Challenge - CP2 FIAP
+# Mottu Challenge - ChallengeFIAP
 
 Este projeto faz parte da disciplina **Advanced Business Development with .NET** e tem como objetivo criar uma API RESTful que soluciona um desafio real da empresa Mottu. A aplicação permite que usuários registrem pátios, associem áreas a esses pátios e façam a gestão desses recursos com segurança e boas práticas.
 
