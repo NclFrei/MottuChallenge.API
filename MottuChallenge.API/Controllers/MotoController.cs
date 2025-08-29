@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MottuChallenge.Application.Service;
-using MottuChallenge.Domain.Dtos.Request;
-using MottuChallenge.Domain.Dtos.Response;
 using System.Text.Json;
+using MottuChallenge.API.Application.Service;
+using MottuChallenge.API.Domain.Dtos.Request;
+using MottuChallenge.API.Domain.Dtos.Response;
 
 namespace MottuChallenge.API.Controllers;
 
@@ -36,7 +36,7 @@ public class MotoController : ControllerBase
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(MotoResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<MotoResponse>> GetById(Guid id)
+    public async Task<ActionResult<MotoResponse>> GetById(int id)
     {
         var response = await _service.GetByIdAsync(id);
         if (response == null)
@@ -48,7 +48,7 @@ public class MotoController : ControllerBase
     [HttpPatch("{id}")]
     [ProducesResponseType(typeof(MotoResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<MotoResponse>> Patch(Guid id, [FromBody] JsonElement request)
+    public async Task<ActionResult<MotoResponse>> Patch(int id, [FromBody] JsonElement request)
     {
         var response = await _service.UpdateAsync(id, request);
         if (response == null)
@@ -60,7 +60,7 @@ public class MotoController : ControllerBase
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Delete(int id)
     {
         var deleted = await _service.DeleteAsync(id);
         if (!deleted)

@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using MottuChallenge.Application.Service;
-using MottuChallenge.Domain.Models;
-using MottuChallenge.Infrastructure.Data;
+
 using System.Text;
+using MottuChallenge.API.Application.Service;
+using MottuChallenge.API.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,13 +48,13 @@ var key = Encoding.ASCII.GetBytes(builder.Configuration["JwtSettings:SecretKey"]
             context.HandleResponse(); 
             context.Response.StatusCode = 401;
             context.Response.ContentType = "application/json";
-            return context.Response.WriteAsync("{\"message\": \"Você precisa estar logado para acessar este recurso.\"}");
+            return context.Response.WriteAsync("{\"message\": \"Vocï¿½ precisa estar logado para acessar este recurso.\"}");
         },
         OnForbidden = context =>
         {
             context.Response.StatusCode = 403;
             context.Response.ContentType = "application/json";
-            return context.Response.WriteAsync("{\"message\": \"Você não tem permissão para acessar este recurso.\"}");
+            return context.Response.WriteAsync("{\"message\": \"Vocï¿½ nï¿½o tem permissï¿½o para acessar este recurso.\"}");
         }
     };
 });  

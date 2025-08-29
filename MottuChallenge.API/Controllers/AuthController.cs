@@ -2,11 +2,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using MottuChallenge.Application.Service;
-using MottuChallenge.Domain.Dtos.Request;
-using MottuChallenge.Domain.Dtos.Response;
-using MottuChallenge.Domain.Models;
-using MottuChallenge.Infrastructure.Data;
+using MottuChallenge.API.Application.Service;
+using MottuChallenge.API.Domain.Dtos.Request;
+using MottuChallenge.API.Domain.Dtos.Response;
+using MottuChallenge.API.Infrastructure.Data;
 
 namespace MottuChallenge.API.Controllers;
 
