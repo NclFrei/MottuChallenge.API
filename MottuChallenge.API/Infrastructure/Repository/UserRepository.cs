@@ -14,6 +14,11 @@ public class UserRepository : IUserRepository
         _context = context;
     }
     
+    public async Task<User?> BuscarPorIdAsync(int id)
+    {
+        return await _context.User.FindAsync(id);
+    }
+
 
     public async Task<bool> VerificaEmailExisteAsync(string email)
     {
@@ -28,6 +33,21 @@ public class UserRepository : IUserRepository
     public async Task<User> CriarAsync(User usuario)
     {
         _context.User.Add(usuario);
+        await _context.SaveChangesAsync();
+        return usuario;
+    }
+    
+    public async Task<bool> DeleteAsync(User usuario)
+    {
+        _context.User.Remove(usuario);
+        await _context.SaveChangesAsync();
+        return true;
+
+    }
+
+    public async Task<User> AtualizarAsync(User usuario)
+    {
+        _context.User.Update(usuario);
         await _context.SaveChangesAsync();
         return usuario;
     }

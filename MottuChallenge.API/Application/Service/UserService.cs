@@ -1,50 +1,56 @@
-﻿using MottuChallenge.Domain.Dtos.Request;
-using MottuChallenge.Domain.Dtos.Response;
-using MottuChallenge.Domain.Models;
-using MottuChallenge.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
 using MottuChallenge.API.Domain.Dtos.Request;
 using MottuChallenge.API.Domain.Dtos.Response;
+using MottuChallenge.API.Domain.Interfaces;
 using MottuChallenge.API.Infrastructure.Data;
 
 namespace MottuChallenge.API.Application.Service;
 
 public class UserService
 {
-    public MottuChallengeContext _context;
+    private readonly IUserRepository _userRepository;
+    private readonly IMapper _mapper;
 
-    public UserService(MottuChallengeContext context)
+    public UserService(IUserRepository userRepository, IMapper mapper)
     {
-        _context = context;
+        _userRepository = userRepository;
+        _mapper = mapper;
+    }
+    
+    public async Task<UserResponse?> GetUserByIdAsync(int id)
+    {
+        var usuario = await _userRepository.BuscarPorIdAsync(id);
+
+        if (usuario == null)
+            return null;
+
+        return _mapper.Map<UserResponse>(usuario);
     }
 
-    public async Task<UserResponse> CreateUserAsync(UserCreateRequest userCreateRequest)
+    public async Task<bool> DeleteAsync(int id)
     {
-        if (await VerificaEmailExisteAsync(userCreateRequest.Email))
-            throw new InvalidOperationException("Email já cadastrado.");
+        var usuario = await _userRepository.BuscarPorIdAsync(id);
+        if (usuario == null)
+            return false;
 
-        var user = new User
-        {
-            Id = Guid.NewGuid(),
-            Nome = userCreateRequest.Nome,
-            Email = userCreateRequest.Email 
-        };
-
-        user.SetPassword(userCreateRequest.Password);
-
-        _context.User.Add(user);
-        await _context.SaveChangesAsync();
-
-        return new UserResponse
-        {
-            Id = user.Id,
-            Nome = user.Nome,
-            Email = user.Email
-        };
+        return await _userRepository.DeleteAsync(usuario); 
     }
 
-    public async Task<bool> VerificaEmailExisteAsync(string email)
+    public async Task<UserResponse> AtualizarPerfilAsync(int id, AtualizarUserRequest request)
     {
-        return await _context.User.CountAsync(u => u.Email == email) > 0;
+        var usuario = await _userRepository.BuscarPorIdAsync(id);
+        if (usuario == null)
+            throw new InvalidOperationException("Usuário não encontrado.");
+
+        _mapper.Map(request, usuario);
+
+        if (!string.IsNullOrWhiteSpace(request.Password))
+            usuario.SetPassword(request.Password);
+
+        await _userRepository.AtualizarAsync(usuario);
+
+
+        return _mapper.Map<UserResponse>(usuario);
     }
+    
 }
