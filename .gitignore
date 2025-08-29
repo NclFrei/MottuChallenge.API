@@ -362,5 +362,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-# Configurações locais de desenvolvimento
-/MottuChallenge.API/appsettings.Development.json
+/MottuChallenge.API/appsettings.Development.jso
