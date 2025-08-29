@@ -18,19 +18,19 @@ public class UserService
         _context = context;
     }
 
-    public async Task<UserResponse> CreateUserAsync(UserRequest userRequest)
+    public async Task<UserResponse> CreateUserAsync(UserCreateRequest userCreateRequest)
     {
-        if (await VerificaEmailExisteAsync(userRequest.Email))
+        if (await VerificaEmailExisteAsync(userCreateRequest.Email))
             throw new InvalidOperationException("Email já cadastrado.");
 
         var user = new User
         {
             Id = Guid.NewGuid(),
-            Nome = userRequest.Nome,
-            Email = userRequest.Email 
+            Nome = userCreateRequest.Nome,
+            Email = userCreateRequest.Email 
         };
 
-        user.SetPassword(userRequest.Password);
+        user.SetPassword(userCreateRequest.Password);
 
         _context.User.Add(user);
         await _context.SaveChangesAsync();

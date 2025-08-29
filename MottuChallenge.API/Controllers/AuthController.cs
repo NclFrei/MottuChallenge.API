@@ -1,0 +1,35 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using MottuChallenge.API.Application.Service;
+using MottuChallenge.API.Domain.Dtos.Request;
+using MottuChallenge.API.Domain.Dtos.Response;
+
+namespace MottuChallenge.API.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class AuthController : ControllerBase
+{
+    private readonly AuthService _authService;
+
+    public AuthController(AuthService authService)
+    {
+        _authService = authService;
+    }
+
+    [HttpPost("login")]
+    [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
+    public async Task<IActionResult> Login([FromBody] LoginRequest request)
+    {
+        var response = await _authService.LoginAsync(request);
+        return Ok(response);
+    }
+
+    [HttpPost("cadastro")]
+    [ProducesResponseType(typeof(UserResponse), StatusCodes.Status201Created)]
+    public async Task<ActionResult<UserResponse>> CriarUsuario([FromBody] UserCreateRequest request)
+    {
+        var usuarioResponse = await _authService.CreateUserAsync(request);
+        return CreatedAtAction(null, usuarioResponse); 
+    }
+}

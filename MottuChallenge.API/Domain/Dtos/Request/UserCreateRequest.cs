@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MottuChallenge.API.Domain.Dtos.Request;
 
-public class UserRequest
+public class UserCreateRequest
 {
     [Required(ErrorMessage = "Nome não pode ser vazio.")]
     public string Nome { get; set; }
