@@ -1,42 +1,51 @@
-﻿using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using MottuChallenge.Domain.Models;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
+using MottuChallenge.API.Domain.Interfaces;
+using MottuChallenge.API.Domain.Models;
 
 namespace MottuChallenge.API.Application.Service;
 
 public class TokenService
 {
-    private readonly JwtSettings _jwtSettings;
+    private readonly IJwtSettingsProvider _jwtSettingsProvider;
 
-    public TokenService(IOptions<JwtSettings> jwtSettings)
+    public TokenService(IJwtSettingsProvider jwtSettingsProvider)
     {
-        _jwtSettings = jwtSettings.Value;
+        _jwtSettingsProvider = jwtSettingsProvider;
     }
 
-    public string GenerateToken(User user)
+    public string Generate(User usuario)
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
-        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        var handler = new JwtSecurityTokenHandler();
+        var key = Encoding.UTF8.GetBytes(_jwtSettingsProvider.SecretKey);
 
-        var claims = new[]
-        {
-            new Claim(ClaimTypes.Name, user.Email),
-            new Claim("UserId", user.Id.ToString())
-        };
-
-        var token = new JwtSecurityToken(
-            claims: claims,
-            expires: DateTime.UtcNow.AddHours(2),
-            signingCredentials: credentials
+        var credentials = new SigningCredentials(
+            new SymmetricSecurityKey(key),
+            SecurityAlgorithms.HmacSha256
         );
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = GenerateClaims(usuario),
+            Expires = DateTime.UtcNow.AddHours(1),
+            SigningCredentials = credentials
+        };
+
+        var token = handler.CreateToken(tokenDescriptor);
+
+        return handler.WriteToken(token);
+    }
+
+
+    public static ClaimsIdentity GenerateClaims(User user)
+    {
+        var ci = new ClaimsIdentity();
+
+        ci.AddClaim(
+            new Claim(ClaimTypes.Name, user.Email));
+
+        return ci;
     }
 }
