@@ -8,6 +8,6 @@ public interface IMotoRepository
     Task<Moto> CreateAsync(Moto moto);
     Task<List<Moto>> GetAllAsync();
     Task<Moto?> GetByIdAsync(int id);
-    Task<Moto?> UpdateAsync(int id, JsonElement request);
+    Task<Moto?> UpdateAsync(Moto moto);
     Task<bool> DeleteAsync(int id);
 }

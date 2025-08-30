@@ -31,47 +31,12 @@ public class MotoRepository : IMotoRepository
         {
             return await _context.Motos.FindAsync(id);
         }
-
-        public async Task<Moto?> UpdateAsync(int id, JsonElement request)
+        
+        
+        public async Task<Moto?> UpdateAsync(Moto moto)
         {
-            var moto = await _context.Motos.FindAsync(id);
-            if (moto == null) return null;
-
-            bool alterado = false;
-
-            if (request.TryGetProperty("placa", out var placaProp))
-            {
-                var novaPlaca = placaProp.GetString();
-                if (!string.IsNullOrWhiteSpace(novaPlaca) && novaPlaca != moto.Placa)
-                {
-                    moto.Placa = novaPlaca;
-                    alterado = true;
-                }
-            }
-
-            if (request.TryGetProperty("modelo", out var modeloProp))
-            {
-                var novoModelo = modeloProp.GetString();
-                if (!string.IsNullOrWhiteSpace(novoModelo) && novoModelo != moto.Modelo)
-                {
-                    moto.Modelo = novoModelo;
-                    alterado = true;
-                }
-            }
-
-            if (request.TryGetProperty("areaId", out var areaIdProp))
-            {
-                var novaAreaId = areaIdProp.GetInt32();
-                if (novaAreaId != moto.AreaId)
-                {
-                    moto.AreaId = novaAreaId;
-                    alterado = true;
-                }
-            }
-
-            if (alterado)
-                await _context.SaveChangesAsync();
-
+            _context.Motos.Update(moto);
+            await _context.SaveChangesAsync();
             return moto;
         }
 

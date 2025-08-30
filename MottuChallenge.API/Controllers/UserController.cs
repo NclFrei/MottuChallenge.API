@@ -20,6 +20,9 @@ public class UserController : ControllerBase
 
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<UserResponse>> ObterUsuario(int id)
     {
         var usuario = await _usuarioService.GetUserByIdAsync(id);
@@ -31,6 +34,9 @@ public class UserController : ControllerBase
 
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeletarUsuario(int id)
     {
         var delete = await _usuarioService.DeleteAsync(id);
@@ -42,6 +48,11 @@ public class UserController : ControllerBase
 
     [HttpPatch("{id}")]
     [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
     public async Task<IActionResult> AtualizarPerfil(int id, [FromBody] AtualizarUserRequest request)
     {
         var atualizado = await _usuarioService.AtualizarPerfilAsync(id, request);

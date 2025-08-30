@@ -1,4 +1,5 @@
 using AutoMapper;
+using FluentValidation;
 using MottuChallenge.API.Domain.Dtos.Request;
 using MottuChallenge.API.Domain.Dtos.Response;
 using MottuChallenge.API.Domain.Interfaces;
@@ -12,12 +13,14 @@ public class AuthService
     private readonly IUserRepository _userRepository;
     private readonly TokenService _tokenService;
     private readonly IMapper _mapper;
+    private readonly IValidator<UserCreateRequest> _validator;
     
-    public AuthService(IUserRepository usuarioRepository, TokenService tokenService, IMapper mapper)
+    public AuthService(IUserRepository usuarioRepository, TokenService tokenService, IMapper mapper, IValidator<UserCreateRequest> validator)
     {
         _userRepository = usuarioRepository;
         _tokenService = tokenService;
         _mapper = mapper;
+        _validator = validator;
 
     }
 
@@ -44,7 +47,16 @@ public class AuthService
 
     public async Task<UserResponse> CreateUserAsync(UserCreateRequest userRequest)
     {
-        
+        var result = await _validator.ValidateAsync(userRequest);
+
+        if (!result.IsValid)
+        {
+            var errors = result.Errors
+                .Select(e => $"{e.PropertyName}: {e.ErrorMessage} ")
+                .ToList();
+
+            throw new ValidationException(string.Join(Environment.NewLine, errors));
+        }
 
         if (await _userRepository.VerificaEmailExisteAsync(userRequest.Email))
             throw new InvalidOperationException("Email já cadastrado.");

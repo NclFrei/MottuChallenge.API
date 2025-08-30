@@ -22,7 +22,7 @@ public class UserRepository : IUserRepository
 
     public async Task<bool> VerificaEmailExisteAsync(string email)
     {
-        return await _context.User.AnyAsync(u => u.Email == email);
+        return await _context.User.CountAsync(u => u.Email == email) > 0;
     }
     
     public async Task<User?> BuscarPorEmailAsync(string email)

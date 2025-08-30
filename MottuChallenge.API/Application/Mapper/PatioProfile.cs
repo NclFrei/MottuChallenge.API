@@ -16,10 +16,17 @@ public class PatioProfile : Profile
 
         // Model -> Response
         CreateMap<Endereco, EnderecoResponse>();
-
+    
         CreateMap<Patio, PatioResponse>()
             .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId)) // 👈 só pega o IdUser
             .ForMember(dest => dest.Endereco, opt => opt.MapFrom(src => src.Endereco))
             .ForMember(dest => dest.Areas, opt => opt.MapFrom(src => src.Areas));
+        
+        CreateMap<AtualizarPatioRequest, Patio>()
+            .ForAllMembers(opt =>
+                opt.Condition((src, dest, srcMember) =>
+                    srcMember != null &&
+                    !(srcMember is string str && string.IsNullOrWhiteSpace(str))
+                ));
     }
 }

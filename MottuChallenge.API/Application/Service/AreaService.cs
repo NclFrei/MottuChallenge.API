@@ -1,16 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿
 using System.Text.Json;
-using System.Threading.Tasks;
+
 using AutoMapper;
+using FluentValidation;
 using MottuChallenge.API.Domain.Dtos.Request;
 using MottuChallenge.API.Domain.Dtos.Response;
 using MottuChallenge.API.Domain.Interfaces;
 using MottuChallenge.API.Domain.Models;
-using MottuChallenge.API.Infrastructure.Data;
+using MottuChallenge.API.Domain.Validator;
+
 
 namespace MottuChallenge.API.Application.Service;
 
@@ -18,15 +16,28 @@ public class AreaService
 {
     private readonly IAreaRepository _repository;
     private readonly IMapper _mapper;
+    private readonly IValidator<AreaRequest> _validator;
 
-    public AreaService(IAreaRepository repository, IMapper mapper)
+    public AreaService(IAreaRepository repository, IMapper mapper, IValidator<AreaRequest> validator)
     {
         _repository = repository;
         _mapper = mapper;
+        _validator = validator;
     }
 
     public async Task<AreaResponse> CreateAsync(AreaRequest request)
     {
+        var result = await _validator.ValidateAsync(request);
+
+        if (!result.IsValid)
+        {
+            var errors = result.Errors
+                .Select(e => $"{e.PropertyName}: {e.ErrorMessage} ")
+                .ToList();
+
+            throw new ValidationException(string.Join(Environment.NewLine, errors));
+        }
+        
         var area = _mapper.Map<Area>(request);
         var created = await _repository.CreateAsync(area);
         return _mapper.Map<AreaResponse>(created);
@@ -44,10 +55,15 @@ public class AreaService
         return area == null ? null : _mapper.Map<AreaResponse>(area);
     }
 
-    public async Task<AreaResponse?> UpdateAsync(int id, JsonElement request)
+    public async Task<AreaResponse?> UpdateAsync(int id, AtualizarAreaRequest request)
     {
-        var area = await _repository.UpdateAsync(id, request);
-        return area == null ? null : _mapper.Map<AreaResponse>(area);
+        var existingArea = await _repository.GetByIdAsync(id);
+        if (existingArea == null) return null;
+
+        _mapper.Map(request, existingArea);
+        
+        var updated = await _repository.UpdateAsync(existingArea);
+        return _mapper.Map<AreaResponse>(updated);
     }
 
     public async Task<bool> DeleteAsync(int id)

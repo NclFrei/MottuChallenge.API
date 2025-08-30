@@ -8,6 +8,6 @@ public interface IPatioRepository
     Task<Patio> CreateAsync(Patio patio, Endereco endereco);
     Task<List<Patio>> GetAllAsync();
     Task<Patio?> GetByIdAsync(int id);
-    Task<Patio?> UpdateAsync(int id, JsonElement request);
+    Task<Patio> UpdateAsync(Patio patio);
     Task<bool> DeleteAsync(int id);
 }

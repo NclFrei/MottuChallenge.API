@@ -35,40 +35,11 @@ public class AreaRepository : IAreaRepository
             .Include(a => a.Motos)
             .FirstOrDefaultAsync(a => a.Id == id);
     }
-
-    public async Task<Area?> UpdateAsync(int id, JsonElement request)
+    
+    public async Task<Area?> UpdateAsync(Area area)
     {
-        var area = await _context.Areas
-            .Include(a => a.Motos)
-            .FirstOrDefaultAsync(a => a.Id == id);
-
-        if (area == null) return null;
-
-        bool alterado = false;
-
-        if (request.TryGetProperty("nome", out var nomeProp))
-        {
-            var novoNome = nomeProp.GetString();
-            if (!string.IsNullOrWhiteSpace(novoNome) && novoNome != area.Nome)
-            {
-                area.Nome = novoNome;
-                alterado = true;
-            }
-        }
-
-        if (request.TryGetProperty("patioId", out var patioIdProp))
-        {
-            var novoPatioId = patioIdProp.GetInt32();
-            if (novoPatioId != area.PatioId)
-            {
-                area.PatioId = novoPatioId;
-                alterado = true;
-            }
-        }
-
-        if (alterado)
-            await _context.SaveChangesAsync();
-
+        _context.Areas.Update(area);
+        await _context.SaveChangesAsync();
         return area;
     }
 

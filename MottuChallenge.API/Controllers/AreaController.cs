@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using MottuChallenge.API.Application.Service;
 using MottuChallenge.API.Domain.Dtos.Request;
 using MottuChallenge.API.Domain.Dtos.Response;
@@ -9,6 +10,7 @@ namespace MottuChallenge.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class AreaController : ControllerBase
 {
     private readonly AreaService _service;
@@ -51,21 +53,27 @@ public class AreaController : ControllerBase
 
         return Ok(response);
     }
-
+    
+    
     [HttpPatch("{id}")]
     [ProducesResponseType(typeof(AreaResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<AreaResponse>> PatchArea(int id, [FromBody] JsonElement request)
+    public async Task<ActionResult<AreaResponse>> PatchArea(int id, [FromBody] AtualizarAreaRequest request)
     {
+        if (request == null)
+            return BadRequest("Request inválido.");
+
         var updated = await _service.UpdateAsync(id, request);
         if (updated == null)
             return NotFound($"Área com ID {id} não encontrada para atualização.");
 
         return Ok(updated);
     }
+    
+    
 
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

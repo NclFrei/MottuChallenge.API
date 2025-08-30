@@ -14,5 +14,12 @@ public class MotoProfile : Profile
 
         // Models -> Responses
         CreateMap<Moto, MotoResponse>();
+        
+        CreateMap<AtualizarMotoRequest, Moto>()
+            .ForAllMembers(opt =>
+                opt.Condition((src, dest, srcMember) =>
+                    srcMember != null &&
+                    !(srcMember is string str && string.IsNullOrWhiteSpace(str))
+                ));
     }
 }

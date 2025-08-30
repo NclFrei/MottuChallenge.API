@@ -50,54 +50,10 @@ public class PatioRepository : IPatioRepository
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task<Patio?> UpdateAsync(int id, JsonElement request)
+        public async Task<Patio> UpdateAsync(Patio patio)
         {
-            var patio = await _context.Patios
-                .Include(p => p.Endereco)
-                .FirstOrDefaultAsync(p => p.Id == id);
-
-            if (patio == null) return null;
-
-            bool alterado = false;
-
-            if (request.TryGetProperty("nome", out var nomeProp))
-            {
-                var novoNome = nomeProp.GetString();
-                if (!string.IsNullOrWhiteSpace(novoNome) && novoNome != patio.Nome)
-                {
-                    patio.Nome = novoNome;
-                    alterado = true;
-                }
-            }
-
-            if (request.TryGetProperty("userId", out var userIdProp))
-            {
-                var novoUserId = userIdProp.GetInt16();
-                if (novoUserId != patio.UserId)
-                {
-                    patio.UserId = novoUserId;
-                    alterado = true;
-                }
-            }
-
-            if (request.TryGetProperty("endereco", out var enderecoProp) && patio.Endereco != null)
-            {
-                var enderecoUpdate = JsonSerializer.Deserialize<EnderecoRequest>(enderecoProp.GetRawText());
-                if (enderecoUpdate != null)
-                {
-                    patio.Endereco.Rua = enderecoUpdate.Rua;
-                    patio.Endereco.Numero = enderecoUpdate.Numero;
-                    patio.Endereco.Bairro = enderecoUpdate.Bairro;
-                    patio.Endereco.Cidade = enderecoUpdate.Cidade;
-                    patio.Endereco.Estado = enderecoUpdate.Estado;
-                    patio.Endereco.Cep = enderecoUpdate.Cep;
-                    alterado = true;
-                }
-            }
-
-            if (alterado)
-                await _context.SaveChangesAsync();
-
+            _context.Patios.Update(patio);
+            await _context.SaveChangesAsync();
             return patio;
         }
 

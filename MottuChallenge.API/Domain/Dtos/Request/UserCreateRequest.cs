@@ -9,14 +9,10 @@ namespace MottuChallenge.API.Domain.Dtos.Request;
 
 public class UserCreateRequest
 {
-    [Required(ErrorMessage = "Nome não pode ser vazio.")]
     public string Nome { get; set; }
 
-    [Required(ErrorMessage = "Email não pode ser vazio.")]
-    [EmailAddress(ErrorMessage = "Formato de email inválido.")]
     public string Email { get; set; }
-
-    [Required(ErrorMessage = "Senha não pode ser vazio.")]
+    
     public string Password { get; set; }
 
 }

@@ -15,5 +15,12 @@ public class AreaProfile : Profile
         // Models -> Responses
         CreateMap<Area, AreaResponse>()
             .ForMember(dest => dest.Motos, opt => opt.MapFrom(src => src.Motos));
+        
+        CreateMap<AtualizarAreaRequest, Area>()
+            .ForAllMembers(opt =>
+                opt.Condition((src, dest, srcMember) =>
+                    srcMember != null &&
+                    !(srcMember is string str && string.IsNullOrWhiteSpace(str))
+                ));
     }
 }
