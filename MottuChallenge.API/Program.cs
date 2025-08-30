@@ -7,6 +7,7 @@ using MottuChallenge.API.Application.Service;
 using MottuChallenge.API.Domain.Interfaces;
 using MottuChallenge.API.Infrastructure.Configuration;
 using MottuChallenge.API.Infrastructure.Data;
+using MottuChallenge.API.Infrastructure.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +33,12 @@ builder.Services.AddScoped<PatioService>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<AreaService>();
 builder.Services.AddScoped<MotoService>();
+
 builder.Services.AddScoped<IJwtSettingsProvider, JwtSettingsProvider>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAreaRepository, AreaRepository>();
+builder.Services.AddScoped<IMotoRepository, MotoRepository>();
+builder.Services.AddScoped<IPatioRepository, PatioRepository>();
 
 
 var key = Encoding.ASCII.GetBytes(builder.Configuration["JwtSettings:SecretKey"]);
