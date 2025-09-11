@@ -18,7 +18,8 @@ using MottuChallenge.API.Middleware;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<MottuChallengeContext>(options =>
-    options.UseOracle(builder.Configuration.GetConnectionString("OracleConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 
 
