@@ -50,7 +50,16 @@ public class PatioRepository : IPatioRepository
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task<Patio> UpdateAsync(Patio patio)
+    public async Task<Patio?> GetByUserIdAsync(int userid)
+    {
+        return await _context.Patios
+            .Include(p => p.Endereco)
+            .Include(p => p.User)
+            .Include(p => p.Areas)
+            .FirstOrDefaultAsync(p => p.UserId == userid);
+    }
+
+    public async Task<Patio> UpdateAsync(Patio patio)
         {
             _context.Patios.Update(patio);
             await _context.SaveChangesAsync();

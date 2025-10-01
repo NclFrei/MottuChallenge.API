@@ -12,7 +12,6 @@ namespace MottuChallenge.API.Controllers;
 
 [Route("ChallengeMottu/[controller]")]
 [ApiController]
-[Authorize]
 public class PatioController : ControllerBase
 {
     private readonly PatioService _patioService;
@@ -54,6 +53,22 @@ public class PatioController : ControllerBase
         var patio = await _patioService.GetPatioByIdAsync(id);
         if (patio == null)
             return NotFound($"Nenhum pátio encontrado com o ID {id}");
+
+
+        return Ok(patio);
+    }
+
+
+    [HttpGet("Userid/{id}")]
+    [ProducesResponseType(typeof(IEnumerable<PatioResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiException), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiException), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiException), StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<PatioResponse>> GetPatioByUserId(int id)
+    {
+        var patio = await _patioService.GetPatioByUserIdAsync(id);
+        if (patio == null)
+            return NotFound($"Nenhum pátio encontrado para esse user ID {id}");
 
 
         return Ok(patio);

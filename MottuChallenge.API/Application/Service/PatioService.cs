@@ -59,6 +59,13 @@ public class PatioService
         return _mapper.Map<List<PatioResponse>>(patios);
     }
 
+    public async Task<PatioResponse?> GetPatioByUserIdAsync(int userid)
+    {
+        var patio = await _repository.GetByIdAsync(userid);
+        return patio == null ? null : _mapper.Map<PatioResponse>(patio);
+    }
+
+
     public async Task<PatioResponse?> GetPatioByIdAsync(int id)
     {
         var patio = await _repository.GetByIdAsync(id);

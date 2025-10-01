@@ -41,6 +41,7 @@ public class AuthService
         {
             Token = token,
             Email = usuario.Email,
+            Id = usuario.Id,
             Nome = usuario.Nome
         };
     }
