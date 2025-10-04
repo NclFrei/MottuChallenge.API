@@ -1,88 +1,168 @@
-# Mottu Challenge - ChallengeFIAP
+# MottuChallenge.API
 
-Este projeto faz parte da disciplina **Advanced Business Development with .NET** e tem como objetivo criar uma API RESTful que soluciona um desafio real da empresa Mottu. A aplicação permite que usuários registrem pátios, associem áreas a esses pátios e façam a gestão desses recursos com segurança e boas práticas.
+API para o desafio técnico da Mottu, implementada em ASP.NET Core.  
+Ela oferece endpoints para gerenciar usuários, pátios, motos e áreas de cobertura, com autenticação via JWT.
 
 ---
 
-## Descrição do Projeto
 
-Uma API RESTful desenvolvida em **.NET 8** com banco de dados **Oracle** utilizando **Clean Architecture**, **Domain-Driven Design (DDD)** e **Entity Framework Core**. O sistema permite:
+## Visão Geral
 
-- Cadastro de usuários
-- Criação e gerenciamento de pátios
-- Associação de áreas a pátios
-- Autenticação via JWT
+Esta API serve como backend para gerenciar recursos de um sistema de logística de motos e pátios, com cobertura geográfica (áreas). Ela permite:
+
+- Cadastro e login de usuários  
+- Registro e consulta de pátios  
+- Registro e consulta de motos  
+- Definição de áreas de cobertura  
+- Autorização com token JWT  
+
+O código está organizado em camadas: Controllers, Services, Repositories, Domain, Infrastructure, etc.
+
+---
+
+## Funcionalidades
+
+- CRUD de usuários  
+- CRUD de pátios  
+- CRUD de motos  
+- CRUD de áreas  
+- Autenticação de usuário (login / JWT)  
+- Validação de dados de entrada (usando FluentValidation ou similar)  
+- Tratamento centralizado de exceções  
+- Mapemento com AutoMapper  
 
 ---
 
 ## Tecnologias Utilizadas
 
-- [.NET 8]
-- ASP.NET Core 
-- Entity Framework Core
-- Oracle Database
-- Swagger
-- JWT Authentication
+- .NET / ASP.NET Core  
+- Entity Framework Core para acesso a dados  
+- AutoMapper  
+- JWT para autenticação  
+- FluentValidation para validações de DTOs  
+- Injeção de dependência (DI)  
+- Camadas de repositório / serviço / controller  
+- Middleware para tratamento global de erros  
 
----
-
-
-## 👥 GRUPO
-
-- RM557647 - Nicollas Frei
-- RM554921 - Eduardo Eiki
-- RM558208 - Heitor Pereira Duarte
-  
 ---
 
 ## Estrutura do Projeto
-MottuChallenge/
 
-  ├── MottuChallenge.API (Presentation)
-
-  ├── MottuChallenge.Application (Services e DTOs)
-
-  ├── MottuChallenge.Domain (Entidades, Models)
-
-  ├── MottuChallenge.Infrastructure (Contexto, Migrations)
-
-
----
-
-### AuthController
-- `POST /api/auth/register` → Criação de usuário
-- `POST /api/auth/login` → Login e retorno do JWT
-
-### PatioController
-- `POST /api/patio` → Criação de pátio
-- `GET /api/patio` → Listagem de todos os pátios
-- `GET /api/patio/{id}` → Obter pátio por ID
-- `PUT /api/patio/{id}` → Atualizar pátio
-- `DELETE /api/patio/{id}` → Deletar pátio
-
-###  AreaController
-- `POST /api/area` → Criar área
-- `GET /api/area` → Listar todas as áreas
-- `GET /api/area/{id}` → Obter área por ID
-- `PUT /api/area/{id}` → Atualizar área
-- `DELETE /api/area/{id}` → Deletar área
+```text
+MottuChallenge.API.sln
+MottuChallenge.API/
+├── Application/
+│   ├── Mapper/
+│   └── Service/
+├── Controllers/
+├── Domain/
+│   ├── Dtos/
+│   ├── Enums/
+│   ├── Interfaces/
+│   ├── Models/
+│   └── Validator/
+├── Erros/
+├── Infrastructure/
+│   ├── Configuration/
+│   ├── Data/
+│   └── Repository/
+├── Middleware/
+├── Program.cs
+├── appsettings.json / appsettings.Development.json
+└── MottuChallenge.API.http
+```
 
 ---
 
-## ✅ Funcionalidades Implementadas
+## Pré-requisitos
 
-- [x] CRUD completo para `User`, `Patio` e `Area`
-- [x] Autenticação com JWT
-- [x] Relacionamento entre Patio → Endereco → Area → User
-- [x] Validações com Data Annotations
-- [x] Documentação com Swagger
-- [x] Clean Architecture aplicada
-- [x] Versionamento de banco via EF Migrations
+- .NET SDK (versão usada no projeto)  
+- SQL Server / banco de dados compatível (ou alterar para outro)  
+- Ferramenta de migrações (ex: `dotnet ef`)  
+- Ferramenta de execução (Visual Studio, VS Code, CLI)  
 
 ---
 
-## 🧪 Como Executar Localmente
+## Configuração & Execução
 
 1. Clone o repositório:
-```bash
-git clone https://github.com/NclFrei/MottuChallenge.API
+
+   ```bash
+   git clone https://github.com/NclFrei/MottuChallenge.API.git
+   cd MottuChallenge.API
+   ```
+
+2. Ajuste o arquivo `appsettings.json` (ou `appsettings.Development.json`) para configurar a string de conexão e parâmetros JWT:
+
+   ```json
+   {
+     "ConnectionStrings": {
+       "DefaultConnection": "Server=...;Database=...;User Id=...;Password=...;"
+     },
+     "JwtSettings": {
+       "SecretKey": "..."
+     }
+   }
+   ```
+
+3. Apply migrations e criar o banco:
+
+   ```bash
+   dotnet ef database update
+   ```
+
+4. Execute a API:
+
+   ```bash
+   dotnet run --project MottuChallenge.API
+   ```
+
+   Ou inicie via IDE configurando como startup project.
+
+5. (Opcional) Use o arquivo `MottuChallenge.API.http` para testar chamadas HTTP diretamente no editor
+
+---
+
+## Endpoints & Rotas
+
+| Método | Rota                     | Descrição |
+|--------|---------------------------|------------|
+| POST   | `/api/auth/login`         | Autenticação / login de usuário |
+| POST   | `/api/users`               | Criação de usuário |
+| GET    | `/api/users/{id}`         | Consulta de usuário |
+| PUT    | `/api/users/{id}`         | Atualização de usuário |
+| DELETE | `/api/users/{id}`         | Exclusão de usuário |
+| GET    | `/api/patios`              | Listar pátios |
+| POST   | `/api/patios`              | Criar pátio |
+| ...    | ...                       | ... |
+
+---
+
+## Autenticação / Segurança
+
+- O login retorna um **token JWT** que deve ser enviado em cada requisição autenticada no cabeçalho **Authorization: Bearer {token}**  
+- Algumas rotas exigem que o usuário esteja autenticado  
+- As permissões de rota devem ser verificadas no código de controller / serviço  
+
+---
+
+## Validações e Tratamento de Erros
+
+- As requisições são validadas com DTOs que usam validadores (ex: `UserCreateRequestValidator`, `AreaCreateRequestValidator`)  
+- Quando há erro de validação, retorna-se erro 400 com detalhes  
+- Existe um **middleware global de exceção** que captura exceções não esperadas e retorna resposta padronizada  
+
+---
+
+## Testes / Cenários de Uso
+
+- Registrar novo usuário  
+- Fazer login  
+- Criar pátios, motos e áreas  
+- Atribuir motos aos pátios  
+- Consultar áreas de cobertura  
+- Tentar chamadas inválidas para testar tratamento de erro  
+
+---
+
+
