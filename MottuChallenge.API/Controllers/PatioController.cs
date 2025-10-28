@@ -34,13 +34,13 @@ public class PatioController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(IEnumerable<PatioResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PagedResponse<PatioResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiException), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ApiException), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<IEnumerable<PatioResponse>>> GetPatios()
+    public async Task<ActionResult<PagedResponse<PatioResponse>>> GetAll([FromQuery] int page = 1,[FromQuery] int limit = 10)
     {
-        var patios = await _patioService.GetAllPatiosAsync();
-        return Ok(patios);
+        var response = await _patioService.GetAllPatiosAsync(page, limit);
+        return Ok(response);
     }
 
     [HttpGet("{id}")]

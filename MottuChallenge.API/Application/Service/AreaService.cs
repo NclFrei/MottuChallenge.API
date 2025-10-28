@@ -3,6 +3,7 @@ using System.Text.Json;
 
 using AutoMapper;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using MottuChallenge.API.Domain.Dtos.Request;
 using MottuChallenge.API.Domain.Dtos.Response;
 using MottuChallenge.API.Domain.Interfaces;
@@ -43,10 +44,36 @@ public class AreaService
         return _mapper.Map<AreaResponse>(created);
     }
 
-    public async Task<List<AreaResponse>> GetAllAsync()
+    public async Task<PagedResponse<AreaResponse>> GetAllAsync(string? nome, int? patioId, int page = 1, int limit = 10)
     {
-        var areas = await _repository.GetAllAsync();
-        return _mapper.Map<List<AreaResponse>>(areas);
+        if (page <= 0) page = 1;
+        
+        if (limit <= 0 || limit > 100) limit = 10;
+        var query = _repository.Query();
+        
+        if (!string.IsNullOrEmpty(nome))
+            query = query.Where(m => m.Nome == nome);
+        
+        if(patioId.HasValue)
+            query = query.Where(m => m.PatioId == patioId);
+        
+        var total = await query.CountAsync();
+        
+        var areas = await query
+            .Skip((page - 1) * limit)
+            .Take(limit)
+            .ToListAsync();
+        
+        var areasResponse = _mapper.Map<List<AreaResponse>>(areas);
+        
+        return new PagedResponse<AreaResponse>(
+            areasResponse,
+            page,
+            limit,
+            total,
+            total > page * limit ? $"/api/area?page={page + 1}&limit={limit}" : null,
+            page > 1 ? $"/api/area?page={page - 1}&limit={limit}" : null
+        );
     }
 
     public async Task<AreaResponse?> GetByIdAsync(int id)

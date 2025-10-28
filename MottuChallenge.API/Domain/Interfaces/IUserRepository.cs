@@ -10,4 +10,5 @@ public interface IUserRepository
     Task<User> CriarAsync(User usuario);
     Task<bool> DeleteAsync(User usuario);
     Task<User> AtualizarAsync(User usuario);
+    IQueryable<User> Query();
 }

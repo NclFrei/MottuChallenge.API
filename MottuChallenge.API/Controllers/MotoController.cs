@@ -32,12 +32,13 @@ public class MotoController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(IEnumerable<MotoResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PagedResponse<MotoResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<IEnumerable<MotoResponse>>> GetAll()
+    public async Task<ActionResult<PagedResponse<MotoResponse>>> GetAll([FromQuery] string? modelo,[FromQuery] int? areaId,[FromQuery] int page = 1,[FromQuery] int limit = 10)
     {
-        return Ok(await _service.GetAllAsync());
+        var response = await _service.GetAllAsync(modelo, areaId, page, limit);
+        return Ok(response);
     }
 
     [HttpGet("{id}")]

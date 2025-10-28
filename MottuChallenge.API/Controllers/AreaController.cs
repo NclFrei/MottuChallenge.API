@@ -30,15 +30,17 @@ public class AreaController : ControllerBase
         var response = await _service.CreateAsync(request);
         return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
     }
-
+    
     [HttpGet]
-    [ProducesResponseType(typeof(IEnumerable<AreaResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PagedResponse<AreaResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<IEnumerable<AreaResponse>>> GetAll()
+    public async Task<ActionResult<PagedResponse<AreaResponse>>> GetAll([FromQuery] string? nome,[FromQuery] int? patioId,[FromQuery] int page = 1,[FromQuery] int limit = 10)
     {
-        return Ok(await _service.GetAllAsync());
+        var response = await _service.GetAllAsync(nome, patioId, page, limit);
+        return Ok(response);
     }
+    
 
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(AreaResponse), StatusCodes.Status200OK)]

@@ -21,7 +21,6 @@ public class MotoService
     private readonly IMapper _mapper;
     private readonly IValidator<MotoRequest> _validator;
 
-
     public MotoService(IMotoRepository repository, IMapper mapper, IValidator<MotoRequest> validator )
     {
         _repository = repository;
@@ -48,10 +47,36 @@ public class MotoService
         return _mapper.Map<MotoResponse>(created);
     }
 
-    public async Task<List<MotoResponse>> GetAllAsync()
+    public async Task<PagedResponse<MotoResponse>> GetAllAsync(string? modelo, int? areaId, int page, int limit = 10)
     {
-        var motos = await _repository.GetAllAsync();
-        return _mapper.Map<List<MotoResponse>>(motos);
+        if (page <= 0) page = 1;
+
+        if (limit <= 0 || limit > 100) limit = 10;
+        var query = _repository.Query();
+        
+        if (!string.IsNullOrEmpty(modelo))
+            query = query.Where(m => m.Modelo == modelo);
+        
+        if(areaId.HasValue)
+            query = query.Where(m => m.AreaId == areaId);
+        
+        var total = await query.CountAsync();
+        
+        var motos = await query
+            .Skip((page - 1) * limit)
+            .Take(limit)
+            .ToListAsync();
+        
+        var motoResponses = _mapper.Map<List<MotoResponse>>(motos);
+        
+        return new PagedResponse<MotoResponse>(
+            motoResponses,
+            page,
+            limit,
+            total,
+            total > page * limit ? $"/api/moto?page={page + 1}&limit={limit}" : null,
+            page > 1 ? $"/api/moto?page={page - 1}&limit={limit}" : null
+        );
     }
 
     public async Task<MotoResponse?> GetByIdAsync(int id)
@@ -64,8 +89,7 @@ public class MotoService
     {
         var existingMoto = await _repository.GetByIdAsync(id);
         if (existingMoto == null) return null;
-
-        // Aplica apenas os campos enviados
+        
         _mapper.Map(request, existingMoto);
 
         var updated = await _repository.UpdateAsync(existingMoto);

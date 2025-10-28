@@ -53,10 +53,30 @@ public class PatioService
         return _mapper.Map<PatioResponse>(created);
     }
 
-    public async Task<List<PatioResponse>> GetAllPatiosAsync()
+    public async Task<PagedResponse<PatioResponse>> GetAllPatiosAsync( int page, int limit = 10)
     {
-        var patios = await _repository.GetAllAsync();
-        return _mapper.Map<List<PatioResponse>>(patios);
+        if (page <= 0) page = 1;
+
+        if (limit <= 0 || limit > 100) limit = 10;
+        var query = _repository.Query();
+        
+        var total = await query.CountAsync();
+        
+        var patios = await query
+            .Skip((page - 1) * limit)
+            .Take(limit)
+            .ToListAsync();
+        
+        var patioResponses = _mapper.Map<List<PatioResponse>>(patios);
+        
+        return new PagedResponse<PatioResponse>(
+            patioResponses,
+            page,
+            limit,
+            total,
+            total > page * limit ? $"/api/patio?page={page + 1}&limit={limit}" : null,
+            page > 1 ? $"/api/patio?page={page - 1}&limit={limit}" : null
+        );
     }
 
     public async Task<PatioResponse?> GetPatioByUserIdAsync(int userid)

@@ -52,4 +52,9 @@ public class UserRepository : IUserRepository
         return usuario;
     }
     
+    public IQueryable<User> Query()
+    {
+        return _context.User.AsQueryable();
+    }
+    
 }

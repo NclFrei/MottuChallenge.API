@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MottuChallenge.API.Application.Service;
 using MottuChallenge.API.Domain.Dtos.Request;
 using MottuChallenge.API.Domain.Dtos.Response;
+using MottuChallenge.API.Erros;
 
 namespace MottuChallenge.API.Controllers;
 
@@ -44,6 +45,16 @@ public class UserController : ControllerBase
             return NotFound($"Não foi possível remover: usuário com ID {id} não encontrado.");
 
         return NoContent();
+    }
+    
+    [HttpGet]
+    [ProducesResponseType(typeof(PagedResponse<UserResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiException), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiException), StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<PagedResponse<UserResponse>>> GetAll([FromQuery] int page = 1,[FromQuery] int limit = 10)
+    {
+        var response = await _usuarioService.GetAllUsersAsync(page, limit);
+        return Ok(response);
     }
 
     [HttpPatch("{id}")]

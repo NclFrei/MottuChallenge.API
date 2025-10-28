@@ -52,4 +52,9 @@ public class AreaRepository : IAreaRepository
         await _context.SaveChangesAsync();
         return true;
     }
+    
+    public IQueryable<Area> Query()
+    {
+        return _context.Areas.AsQueryable();
+    }
 }

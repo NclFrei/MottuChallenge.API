@@ -10,4 +10,5 @@ public interface IPatioRepository
     Task<Patio?> GetByIdAsync(int id);
     Task<Patio> UpdateAsync(Patio patio);
     Task<bool> DeleteAsync(int id);
+    IQueryable<Patio> Query();
 }

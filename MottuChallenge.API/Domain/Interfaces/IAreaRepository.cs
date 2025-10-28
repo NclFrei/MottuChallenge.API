@@ -10,4 +10,5 @@ public interface IAreaRepository
     Task<Area?> GetByIdAsync(int id);
     Task<Area?> UpdateAsync(Area area);
     Task<bool> DeleteAsync(int id);
+    IQueryable<Area> Query();
 }

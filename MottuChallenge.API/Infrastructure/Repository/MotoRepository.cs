@@ -49,4 +49,8 @@ public class MotoRepository : IMotoRepository
             await _context.SaveChangesAsync();
             return true;
         }
+        public IQueryable<Moto> Query()
+        {
+            return _context.Motos.AsQueryable();
+        }
     }

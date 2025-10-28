@@ -10,4 +10,5 @@ public interface IMotoRepository
     Task<Moto?> GetByIdAsync(int id);
     Task<Moto?> UpdateAsync(Moto moto);
     Task<bool> DeleteAsync(int id);
+    IQueryable<Moto> Query();
 }

@@ -8,47 +8,47 @@ using MottuChallenge.API.Infrastructure.Data;
 namespace MottuChallenge.API.Infrastructure.Repository;
 
 public class PatioRepository : IPatioRepository
+{
+    private readonly MottuChallengeContext _context;
+
+    public PatioRepository(MottuChallengeContext context)
     {
-        private readonly MottuChallengeContext _context;
+        _context = context;
+    }
 
-        public PatioRepository(MottuChallengeContext context)
-        {
-            _context = context;
-        }
+    public async Task<Patio> CreateAsync(Patio patio, Endereco endereco)
+    {
+        _context.Enderecos.Add(endereco);
+        await _context.SaveChangesAsync();
 
-        public async Task<Patio> CreateAsync(Patio patio, Endereco endereco)
-        {
-            _context.Enderecos.Add(endereco);
-            await _context.SaveChangesAsync();
+        patio.EnderecoId = endereco.Id;
+        _context.Patios.Add(patio);
+        await _context.SaveChangesAsync();
 
-            patio.EnderecoId = endereco.Id;
-            _context.Patios.Add(patio);
-            await _context.SaveChangesAsync();
+        endereco.IdPatio = patio.Id;
+        _context.Enderecos.Update(endereco);
+        await _context.SaveChangesAsync();
 
-            endereco.IdPatio = patio.Id;
-            _context.Enderecos.Update(endereco);
-            await _context.SaveChangesAsync();
+        return patio;
+    }
 
-            return patio;
-        }
+    public async Task<List<Patio>> GetAllAsync()
+    {
+        return await _context.Patios
+            .Include(p => p.Endereco)
+            .Include(p => p.User)
+            .Include(p => p.Areas)
+            .ToListAsync();
+    }
 
-        public async Task<List<Patio>> GetAllAsync()
-        {
-            return await _context.Patios
-                .Include(p => p.Endereco)
-                .Include(p => p.User)
-                .Include(p => p.Areas)
-                .ToListAsync();
-        }
-
-        public async Task<Patio?> GetByIdAsync(int id)
-        {
-            return await _context.Patios
-                .Include(p => p.Endereco)
-                .Include(p => p.User)
-                .Include(p => p.Areas)
-                .FirstOrDefaultAsync(p => p.Id == id);
-        }
+    public async Task<Patio?> GetByIdAsync(int id)
+    {
+        return await _context.Patios
+            .Include(p => p.Endereco)
+            .Include(p => p.User)
+            .Include(p => p.Areas)
+            .FirstOrDefaultAsync(p => p.Id == id);
+    }
 
     public async Task<Patio?> GetByUserIdAsync(int userid)
     {
@@ -74,5 +74,10 @@ public class PatioRepository : IPatioRepository
             _context.Patios.Remove(patio);
             await _context.SaveChangesAsync();
             return true;
+        }
+        
+        public IQueryable<Patio> Query()
+        {
+            return _context.Patios.AsQueryable();
         }
     }
