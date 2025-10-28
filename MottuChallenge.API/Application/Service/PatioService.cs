@@ -114,6 +114,41 @@ public class PatioService
         var updated = await _repository.UpdateAsync(existingPatio);
         return _mapper.Map<PatioResponse>(updated);
     }
+    
+    public async Task<PatioResponse?> ReplacePatioAsync(int id, PatioRequest request)
+    {
+        var validation = await _validator.ValidateAsync(request);
+        if (!validation.IsValid)
+        {
+            var errors = validation.Errors
+                .Select(e => $"{e.PropertyName}: {e.ErrorMessage}")
+                .ToList();
+
+            throw new ValidationException(string.Join(Environment.NewLine, errors));
+        }
+
+        var existingPatio = await _repository.GetByIdAsync(id);
+        if (existingPatio == null) return null;
+
+        // PUT = sobrescreve tudo do Patio
+        _mapper.Map(request, existingPatio);
+
+        if (request.Endereco != null)
+        {
+            // PUT = sempre deve ter endereço, então sobrescreve completamente
+            if (existingPatio.Endereco == null)
+            {
+                existingPatio.Endereco = _mapper.Map<Endereco>(request.Endereco);
+            }
+            else
+            {
+                _mapper.Map(request.Endereco, existingPatio.Endereco);
+            }
+        }
+
+        var updated = await _repository.UpdateAsync(existingPatio);
+        return _mapper.Map<PatioResponse>(updated);
+    }
 
     public async Task<bool> DeletePatioAsync(int id)
     {

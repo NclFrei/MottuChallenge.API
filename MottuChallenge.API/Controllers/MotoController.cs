@@ -72,6 +72,24 @@ public class MotoController : ControllerBase
 
         return Ok(updated);
     }
+    
+    [HttpPut("{id}")]
+    [ProducesResponseType(typeof(MotoResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<MotoResponse>> PutMoto(int id, [FromBody] MotoRequest request)
+    {
+        if (request == null)
+            return BadRequest("Request inválido.");
+
+        var updated = await _service.ReplaceAsync(id, request);
+        if (updated == null)
+            return NotFound($"Moto com ID {id} não encontrada.");
+
+        return Ok(updated);
+    }
 
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

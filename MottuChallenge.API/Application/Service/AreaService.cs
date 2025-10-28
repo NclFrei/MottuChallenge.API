@@ -92,6 +92,28 @@ public class AreaService
         var updated = await _repository.UpdateAsync(existingArea);
         return _mapper.Map<AreaResponse>(updated);
     }
+    
+    public async Task<AreaResponse?> ReplaceAsync(int id, AreaRequest request)
+    {
+        var validation = await _validator.ValidateAsync(request);
+    
+        if (!validation.IsValid)
+        {
+            var errors = validation.Errors
+                .Select(e => $"{e.PropertyName}: {e.ErrorMessage}")
+                .ToList();
+
+            throw new ValidationException(string.Join(Environment.NewLine, errors));
+        }
+
+        var existingArea = await _repository.GetByIdAsync(id);
+        if (existingArea == null) return null;
+        
+        _mapper.Map(request, existingArea);
+
+        var updated = await _repository.UpdateAsync(existingArea);
+        return _mapper.Map<AreaResponse>(updated);
+    }
 
     public async Task<bool> DeleteAsync(int id)
     {

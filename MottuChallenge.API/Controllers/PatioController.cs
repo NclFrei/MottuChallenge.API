@@ -91,6 +91,24 @@ public class PatioController : ControllerBase
 
         return Ok(updated);
     }
+    
+    [HttpPut("{id}")]
+    [ProducesResponseType(typeof(PatioResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiException), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiException), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiException), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiException), StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<PatioResponse>> PutPatio(int id, [FromBody] PatioRequest request)
+    {
+        if (request == null)
+            return BadRequest("Request inválido.");
+
+        var updated = await _patioService.ReplacePatioAsync(id, request);
+        if (updated == null)
+            return NotFound($"Pátio com ID {id} não encontrado.");
+
+        return Ok(updated);
+    }
 
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

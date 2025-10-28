@@ -95,6 +95,28 @@ public class MotoService
         var updated = await _repository.UpdateAsync(existingMoto);
         return _mapper.Map<MotoResponse>(updated);
     }
+    
+    public async Task<MotoResponse?> ReplaceAsync(int id, MotoRequest request)
+    {
+        var validation = await _validator.ValidateAsync(request);
+        if (!validation.IsValid)
+        {
+            var errors = validation.Errors
+                .Select(e => $"{e.PropertyName}: {e.ErrorMessage}")
+                .ToList();
+
+            throw new ValidationException(string.Join(Environment.NewLine, errors));
+        }
+
+        var existingMoto = await _repository.GetByIdAsync(id);
+        if (existingMoto == null) return null;
+
+        // PUT sobrescreve TODOS os campos da entidade
+        _mapper.Map(request, existingMoto);
+
+        var updated = await _repository.UpdateAsync(existingMoto);
+        return _mapper.Map<MotoResponse>(updated);
+    }
 
     public async Task<bool> DeleteAsync(int id)
     {

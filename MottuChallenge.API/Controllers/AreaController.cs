@@ -75,6 +75,22 @@ public class AreaController : ControllerBase
         return Ok(updated);
     }
     
+    [HttpPut("{id}")]
+    [ProducesResponseType(typeof(AreaResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<AreaResponse>> PutArea(int id, [FromBody] AreaRequest request)
+    {
+        if (request == null)
+            return BadRequest("Request inválido.");
+
+        var updated = await _service.ReplaceAsync(id, request);
+        if (updated == null)
+            return NotFound($"Área com ID {id} não encontrada.");
+
+        return Ok(updated);
+    }
+    
     
 
     [HttpDelete("{id}")]
