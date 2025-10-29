@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using MottuChallenge.API.Application.Service;
 using MottuChallenge.API.Domain.Dtos.Request;
@@ -8,7 +9,8 @@ using MottuChallenge.API.Domain.Dtos.Response;
 
 namespace MottuChallenge.API.Controllers;
 
-[Route("api/[controller]")]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
 [Authorize]
 public class AreaController : ControllerBase
@@ -74,7 +76,7 @@ public class AreaController : ControllerBase
 
         return Ok(updated);
     }
-    
+           
     [HttpPut("{id}")]
     [ProducesResponseType(typeof(AreaResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

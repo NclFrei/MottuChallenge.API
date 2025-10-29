@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using System.Text.Json;
+using Asp.Versioning;
 using MottuChallenge.API.Application.Service;
 using MottuChallenge.API.Domain.Dtos.Request;
 using MottuChallenge.API.Domain.Dtos.Response;
@@ -10,7 +11,8 @@ using MottuChallenge.API.Erros;
 
 namespace MottuChallenge.API.Controllers;
 
-[Route("ChallengeMottu/[controller]")]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
 public class PatioController : ControllerBase
 {
