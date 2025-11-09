@@ -196,3 +196,6 @@ app.MapHealthChecks("/health/details", new HealthCheckOptions
 app.MapControllers();
 
 app.Run();
+
+// Expose the implicit Program class for integration tests (WebApplicationFactory<T>)
+public partial class Program { }
