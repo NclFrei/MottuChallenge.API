@@ -141,13 +141,6 @@ builder.Services.AddHealthChecks()
 // ✅ BUILD APP
 var app = builder.Build();
 
-// ✅ RODA AS MIGRATIONS AUTOMATICAMENTE AO INICIAR
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<MottuChallengeContext>();
-    dbContext.Database.Migrate();
-}
-
 // ✅ Middleware de Erros
 app.UseMiddleware<ExceptionMiddleware>();
 
