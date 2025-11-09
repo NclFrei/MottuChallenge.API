@@ -363,3 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 
 /MottuChallenge.API/appsettings.Development.jso
+/MottuChallenge.Test
+/.gitignore
+/.gitignore
