@@ -60,12 +60,15 @@ public class MotoService
         if(areaId.HasValue)
             query = query.Where(m => m.AreaId == areaId);
         
-        var total = await query.CountAsync();
+        // Use synchronous execution wrapped in Task.FromResult to support in-memory IQueryable in tests
+        var total = await Task.FromResult(query.Count());
         
-        var motos = await query
-            .Skip((page - 1) * limit)
-            .Take(limit)
-            .ToListAsync();
+        var motos = await Task.FromResult(
+            query
+                .Skip((page - 1) * limit)
+                .Take(limit)
+                .ToList()
+        );
         
         var motoResponses = _mapper.Map<List<MotoResponse>>(motos);
         
@@ -87,15 +90,15 @@ public class MotoService
 
     public async Task<MotoResponse?> UpdateAsync(int id, AtualizarMotoRequest request)
     {
-        var existingMoto = await _repository.GetByIdAsync(id);
-        if (existingMoto == null) return null;
-        
-        _mapper.Map(request, existingMoto);
+        var existing = await _repository.GetByIdAsync(id);
+        if (existing == null) return null;
 
-        var updated = await _repository.UpdateAsync(existingMoto);
+        _mapper.Map(request, existing);
+
+        var updated = await _repository.UpdateAsync(existing);
         return _mapper.Map<MotoResponse>(updated);
     }
-    
+
     public async Task<MotoResponse?> ReplaceAsync(int id, MotoRequest request)
     {
         var validation = await _validator.ValidateAsync(request);
@@ -108,13 +111,12 @@ public class MotoService
             throw new ValidationException(string.Join(Environment.NewLine, errors));
         }
 
-        var existingMoto = await _repository.GetByIdAsync(id);
-        if (existingMoto == null) return null;
+        var existing = await _repository.GetByIdAsync(id);
+        if (existing == null) return null;
 
-        // PUT sobrescreve TODOS os campos da entidade
-        _mapper.Map(request, existingMoto);
+        _mapper.Map(request, existing);
 
-        var updated = await _repository.UpdateAsync(existingMoto);
+        var updated = await _repository.UpdateAsync(existing);
         return _mapper.Map<MotoResponse>(updated);
     }
 

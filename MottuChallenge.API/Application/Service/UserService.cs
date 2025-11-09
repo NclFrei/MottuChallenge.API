@@ -44,12 +44,15 @@ public class UserService
         if (limit <= 0 || limit > 100) limit = 10;
         var query = _userRepository.Query();
         
-        var total = await query.CountAsync();
+        // Use synchronous execution wrapped in Task.FromResult to support in-memory IQueryable in tests
+        var total = await Task.FromResult(query.Count());
         
-        var user = await query
-            .Skip((page - 1) * limit)
-            .Take(limit)
-            .ToListAsync();
+        var user = await Task.FromResult(
+            query
+                .Skip((page - 1) * limit)
+                .Take(limit)
+                .ToList()
+        );
         
         var userResponse = _mapper.Map<List<UserResponse>>(user);
         

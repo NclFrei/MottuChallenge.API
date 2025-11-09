@@ -60,17 +60,20 @@ public class PatioService
         if (limit <= 0 || limit > 100) limit = 10;
         var query = _repository.Query();
         
-        var total = await query.CountAsync();
+        // Use synchronous execution wrapped in Task.FromResult to support in-memory IQueryable in tests
+        var total = await Task.FromResult(query.Count());
         
-        var patios = await query
-            .Skip((page - 1) * limit)
-            .Take(limit)
-            .ToListAsync();
+        var patios = await Task.FromResult(
+            query
+                .Skip((page - 1) * limit)
+                .Take(limit)
+                .ToList()
+        );
         
-        var patioResponses = _mapper.Map<List<PatioResponse>>(patios);
+        var userResponse = _mapper.Map<List<PatioResponse>>(patios);
         
         return new PagedResponse<PatioResponse>(
-            patioResponses,
+            userResponse,
             page,
             limit,
             total,

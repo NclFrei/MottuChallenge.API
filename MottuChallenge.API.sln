@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36109.1 d17.14
+VisualStudioVersion = 17.14.36109.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MottuChallenge.API", "MottuChallenge.API\MottuChallenge.API.csproj", "{70B80846-237A-4B2B-9D20-B38F45B1986D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MottuChallenge.API.Test", "MottuChallenge.API.Test\MottuChallenge.API.Test.csproj", "{9381F98E-F46D-47E7-9B61-562B08A48EAC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{70B80846-237A-4B2B-9D20-B38F45B1986D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70B80846-237A-4B2B-9D20-B38F45B1986D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70B80846-237A-4B2B-9D20-B38F45B1986D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9381F98E-F46D-47E7-9B61-562B08A48EAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9381F98E-F46D-47E7-9B61-562B08A48EAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9381F98E-F46D-47E7-9B61-562B08A48EAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9381F98E-F46D-47E7-9B61-562B08A48EAC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

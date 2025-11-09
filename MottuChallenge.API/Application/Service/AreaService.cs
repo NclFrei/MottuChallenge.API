@@ -1,5 +1,4 @@
-﻿
-using System.Text.Json;
+﻿using System.Text.Json;
 
 using AutoMapper;
 using FluentValidation;
@@ -57,12 +56,15 @@ public class AreaService
         if(patioId.HasValue)
             query = query.Where(m => m.PatioId == patioId);
         
-        var total = await query.CountAsync();
+        // Use synchronous execution wrapped in Task.FromResult to support in-memory IQueryable in tests
+        var total = await Task.FromResult(query.Count());
         
-        var areas = await query
-            .Skip((page - 1) * limit)
-            .Take(limit)
-            .ToListAsync();
+        var areas = await Task.FromResult(
+            query
+                .Skip((page - 1) * limit)
+                .Take(limit)
+                .ToList()
+        );
         
         var areasResponse = _mapper.Map<List<AreaResponse>>(areas);
         
