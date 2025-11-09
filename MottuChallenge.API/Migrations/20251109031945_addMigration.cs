@@ -14,16 +14,16 @@ namespace MottuChallenge.API.Migrations
                 name: "Enderecos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Rua = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Numero = table.Column<long>(type: "bigint", nullable: false),
-                    Bairro = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Cidade = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Estado = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Cep = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Complemento = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IdPatio = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
+                    Rua = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    Numero = table.Column<long>(type: "NUMBER(19)", nullable: false),
+                    Bairro = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    Cidade = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    Estado = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    Cep = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    Complemento = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    IdPatio = table.Column<int>(type: "NUMBER(10)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -34,11 +34,11 @@ namespace MottuChallenge.API.Migrations
                 name: "User",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
+                    Nome = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    Email = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    Password = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -49,11 +49,11 @@ namespace MottuChallenge.API.Migrations
                 name: "Patios",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EnderecoId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
+                    Nome = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    EnderecoId = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    UserId = table.Column<int>(type: "NUMBER(10)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -76,10 +76,10 @@ namespace MottuChallenge.API.Migrations
                 name: "Areas",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PatioId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
+                    Nome = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    PatioId = table.Column<int>(type: "NUMBER(10)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -96,11 +96,11 @@ namespace MottuChallenge.API.Migrations
                 name: "Motos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Placa = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Modelo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AreaId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
+                    Placa = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    Modelo = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    AreaId = table.Column<int>(type: "NUMBER(10)", nullable: false)
                 },
                 constraints: table =>
                 {

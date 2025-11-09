@@ -21,7 +21,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // ✅ DATABASE
 builder.Services.AddDbContext<MottuChallengeContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseOracle(builder.Configuration.GetConnectionString("OracleConnection")));
 
 // ✅ JWT SETTINGS
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JWTSettings"));
