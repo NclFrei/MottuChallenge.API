@@ -5,8 +5,6 @@ Ela oferece endpoints para gerenciar usuários, pátios, motos e áreas de cober
 
 ---
 
-Testando
-
 ## Visão Geral
 
 Esta API serve como backend para gerenciar recursos de um sistema de logística de motos e pátios, com cobertura geográfica (áreas). Ela permite:
